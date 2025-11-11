@@ -6,6 +6,7 @@ export default function Navigation() {
   const [activeSection, setActiveSection] = useState("");
   const [showTriangle, setShowTriangle] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -63,6 +64,11 @@ export default function Navigation() {
       // Show triangle when scrolled past hero (first section)
       setShowTriangle(mainElement.scrollTop > mainElement.clientHeight * 0.5);
 
+      // Calculate scroll progress
+      const scrollHeight = mainElement.scrollHeight - mainElement.clientHeight;
+      const progress = (mainElement.scrollTop / scrollHeight) * 100;
+      setScrollProgress(progress);
+
       let foundSection = "";
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -93,56 +99,21 @@ export default function Navigation() {
 
   return (
     <>
-      {/* Navigation dots - right side with mix-blend-difference */}
+      {/* Progress bar - right side */}
       {mounted && (
-        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 mix-blend-difference">
-          {['hero', 'services', 'about', 'projects', 'contact'].map((section) => {
-            const isActive = mounted && ((section === 'hero' && !activeSection && !showTriangle) || activeSection === section);
-
-            return (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className="group relative"
-                aria-label={`Go to ${section}`}
-              >
-                <div
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    isActive
-                      ? 'bg-white scale-125'
-                      : 'bg-white group-hover:bg-white'
-                  }`}
-                />
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Red dots overlay - always red, no blend mode */}
-      {mounted && (
-        <div className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-4 pointer-events-none">
-          {['hero', 'services', 'about', 'projects', 'contact'].map((section) => {
-            const isActive = mounted && ((section === 'hero' && !activeSection && !showTriangle) || activeSection === section);
-
-            return (
-              <div key={section} className="relative w-2 h-2">
-                <div
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    isActive ? 'bg-[#FF0000] scale-125' : 'opacity-0'
-                  }`}
-                />
-              </div>
-            );
-          })}
+        <div className="fixed right-0 top-0 h-screen w-1 z-50 pointer-events-none">
+          <div
+            className="w-full bg-accent transition-all duration-300 ease-out"
+            style={{ height: `${scrollProgress}%` }}
+          />
         </div>
       )}
 
       {/* Red triangle - separate layer, always red */}
       {mounted && (
         <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-          <div className="max-w-[1920px] mx-auto px-8 lg:px-16">
-            <div className="flex items-center justify-center gap-12 lg:gap-16 xl:gap-20 h-20 lg:h-24">
+          <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-16">
+            <div className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 h-20 lg:h-24">
               <button
                 onClick={() => {
                   const mainElement = document.querySelector('main');
@@ -158,42 +129,42 @@ export default function Navigation() {
                 </svg>
               </button>
               {/* Spacers to match nav layout */}
-              <div className="font-inter font-semibold text-base lg:text-lg tracking-tight invisible">SERVICES</div>
-              <div className="font-inter font-semibold text-base lg:text-lg tracking-tight invisible">ABOUT</div>
-              <div className="font-inter font-semibold text-base lg:text-lg tracking-tight invisible">PROJECT</div>
-              <div className="font-inter font-semibold text-base lg:text-lg tracking-tight invisible">CONTACT</div>
+              <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight invisible">SERVICES</div>
+              <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight invisible">ABOUT</div>
+              <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight invisible">PROJECT</div>
+              <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight invisible">CONTACT</div>
             </div>
           </div>
         </div>
       )}
 
       <nav className="fixed top-0 left-0 right-0 z-50 mix-blend-difference pointer-events-none">
-        <div className="max-w-[1920px] mx-auto px-8 lg:px-16">
-          <div className="flex items-center justify-center gap-12 lg:gap-16 xl:gap-20 h-20 lg:h-24">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-16">
+          <div className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 h-20 lg:h-24">
             {/* Spacer for triangle alignment */}
-            <div className="w-4 lg:w-5" aria-hidden="true"></div>
+            <div className="w-3.5 lg:w-4" aria-hidden="true"></div>
 
             <button
               onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="font-inter font-semibold text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
+              className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
             >
               SERVICES
             </button>
             <button
               onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="font-inter font-semibold text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
+              className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
             >
               ABOUT
             </button>
             <button
               onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="font-inter font-semibold text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
+              className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
             >
               PROJECT
             </button>
             <button
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-              className="font-inter font-semibold text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
+              className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg text-white tracking-tight hover:opacity-70 transition-opacity pointer-events-auto"
             >
               CONTACT
             </button>
@@ -203,30 +174,30 @@ export default function Navigation() {
 
       {/* Red brackets layer - always red, no blend mode */}
       <div className="fixed top-0 left-0 right-0 z-50 pointer-events-none">
-        <div className="max-w-[1920px] mx-auto px-8 lg:px-16">
-          <div className="flex items-center justify-center gap-12 lg:gap-16 xl:gap-20 h-20 lg:h-24">
+        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-16">
+          <div className="flex items-center justify-center gap-8 sm:gap-12 md:gap-16 lg:gap-20 xl:gap-24 h-20 lg:h-24">
             {/* Spacer for triangle alignment */}
-            <div className="w-4 lg:w-5" aria-hidden="true"></div>
+            <div className="w-3.5 lg:w-4" aria-hidden="true"></div>
 
-            <div className="font-inter font-semibold text-base lg:text-lg tracking-tight relative">
-              <span className="absolute -left-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "services" ? 1 : 0 }}>{`{`}</span>
+            <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight relative">
+              <span className="absolute -left-3 sm:-left-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "services" ? 1 : 0 }}>{`{`}</span>
               <span className="invisible">SERVICES</span>
-              <span className="absolute -right-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "services" ? 1 : 0 }}>{`}`}</span>
+              <span className="absolute -right-3 sm:-right-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "services" ? 1 : 0 }}>{`}`}</span>
             </div>
-            <div className="font-inter font-semibold text-base lg:text-lg tracking-tight relative">
-              <span className="absolute -left-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "about" ? 1 : 0 }}>{`{`}</span>
+            <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight relative">
+              <span className="absolute -left-3 sm:-left-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "about" ? 1 : 0 }}>{`{`}</span>
               <span className="invisible">ABOUT</span>
-              <span className="absolute -right-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "about" ? 1 : 0 }}>{`}`}</span>
+              <span className="absolute -right-3 sm:-right-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "about" ? 1 : 0 }}>{`}`}</span>
             </div>
-            <div className="font-inter font-semibold text-base lg:text-lg tracking-tight relative">
-              <span className="absolute -left-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "projects" ? 1 : 0 }}>{`{`}</span>
+            <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight relative">
+              <span className="absolute -left-3 sm:-left-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "projects" ? 1 : 0 }}>{`{`}</span>
               <span className="invisible">PROJECT</span>
-              <span className="absolute -right-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "projects" ? 1 : 0 }}>{`}`}</span>
+              <span className="absolute -right-3 sm:-right-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "projects" ? 1 : 0 }}>{`}`}</span>
             </div>
-            <div className="font-inter font-semibold text-base lg:text-lg tracking-tight relative">
-              <span className="absolute -left-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "contact" ? 1 : 0 }}>{`{`}</span>
+            <div className="font-inter font-semibold text-xs sm:text-sm md:text-base lg:text-lg tracking-tight relative">
+              <span className="absolute -left-3 sm:-left-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "contact" ? 1 : 0 }}>{`{`}</span>
               <span className="invisible">CONTACT</span>
-              <span className="absolute -right-4 text-[#FF0000] opacity-0 transition-opacity" style={{ opacity: activeSection === "contact" ? 1 : 0 }}>{`}`}</span>
+              <span className="absolute -right-3 sm:-right-3.5 text-[#FF0000] opacity-0 transition-opacity text-xs sm:text-sm md:text-base lg:text-lg" style={{ opacity: activeSection === "contact" ? 1 : 0 }}>{`}`}</span>
             </div>
           </div>
         </div>

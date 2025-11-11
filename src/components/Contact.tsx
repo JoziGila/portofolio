@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -10,10 +11,37 @@ export default function Contact() {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log("Form submitted:", formData);
+    setIsSubmitting(true);
+    setSubmitMessage("");
+
+    try {
+      // Formspree will send emails to theodoraropi@gmail.com
+      // You can sign up with ANY email, then set theodoraropi@gmail.com as recipient in form settings
+      const FORMSPREE_ID = "xgvredok"; // Formspree form ID
+      const response = await fetch(`https://formspree.io/f/${FORMSPREE_ID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setSubmitMessage("Message sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        setSubmitMessage("Failed to send message. Please try again.");
+      }
+    } catch (error) {
+      setSubmitMessage("Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (
@@ -28,16 +56,22 @@ export default function Contact() {
   return (
     <section
       id="contact"
-      className="relative bg-white text-black min-h-screen h-screen w-full flex items-center overflow-hidden snap-start snap-always"
+      className="relative bg-white text-black h-screen w-full snap-start snap-always pt-[10vh] lg:pt-0"
     >
-      <div className="relative w-full max-w-[1920px] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-8 lg:py-12">
+      <div className="h-[90vh] lg:h-full w-full flex flex-col lg:block">
+        {/* Mobile/Tablet: Top-aligned container */}
+        <div className="h-full flex items-start justify-center lg:block">
+          {/* Desktop: Original layout with spacing */}
+          <div className="lg:h-[15%] hidden lg:block"></div>
+          <div className="w-full max-h-full overflow-y-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 py-4 lg:h-[85%]">
+            <div className="relative w-full max-w-[1920px] mx-auto">
         {/* Main heading - BOLD and striking */}
         <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="font-inter font-bold text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tighter text-black mb-8 lg:mb-12 max-w-5xl leading-[0.9]"
+          className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tighter text-black mb-8 lg:mb-12 max-w-5xl leading-[0.9]"
         >
           Let's bring your vision to life
         </motion.h2>
@@ -52,11 +86,14 @@ export default function Contact() {
             className="lg:col-span-4 space-y-4"
           >
             {/* Profile image - compact but striking */}
-            <div className="relative w-32 h-32 lg:w-40 lg:h-40 rounded-full overflow-hidden ring-4 ring-black">
-              <img
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 lg:w-32 lg:h-32 xl:w-40 xl:h-40 rounded-full overflow-hidden ring-4 ring-black">
+              <Image
                 src="/dori.png"
                 alt="Theodora Ropi"
-                className="w-full h-full object-cover object-top"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 640px) 96px, (max-width: 1024px) 112px, (max-width: 1280px) 128px, 160px"
+                loading="lazy"
               />
             </div>
 
@@ -89,7 +126,7 @@ export default function Contact() {
                   onChange={handleChange}
                   placeholder="Name *"
                   required
-                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-3 text-black text-lg md:text-xl lg:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors"
+                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-4 text-black text-base md:text-lg lg:text-xl xl:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
@@ -102,7 +139,7 @@ export default function Contact() {
                   onChange={handleChange}
                   placeholder="E-mail *"
                   required
-                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-3 text-black text-lg md:text-xl lg:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors"
+                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-4 text-black text-base md:text-lg lg:text-xl xl:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors"
                 />
               </div>
 
@@ -114,20 +151,40 @@ export default function Contact() {
                   onChange={handleChange}
                   placeholder="Hi!"
                   rows={1}
-                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-3 text-black text-lg md:text-xl lg:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors resize-none"
+                  className="w-full bg-transparent border-0 border-b-2 border-black/20 pb-4 text-black text-base md:text-lg lg:text-xl xl:text-2xl font-medium placeholder:text-black/40 focus:outline-none focus:border-accent transition-colors resize-none"
                 />
               </div>
 
               {/* Submit button - striking CTA */}
               <motion.button
                 type="submit"
-                whileHover={{ scale: 1.05, x: 10 }}
-                whileTap={{ scale: 0.95 }}
-                className="font-inter font-bold text-xl md:text-2xl lg:text-3xl tracking-tight text-black hover:text-accent transition-colors flex items-center gap-3"
+                disabled={isSubmitting}
+                whileHover={!isSubmitting ? { scale: 1.05, x: 10 } : {}}
+                whileTap={!isSubmitting ? { scale: 0.95 } : {}}
+                className={`font-inter font-bold text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight transition-colors flex items-center gap-3 ${
+                  isSubmitting
+                    ? "text-black/40 cursor-not-allowed"
+                    : "text-black hover:text-accent"
+                }`}
               >
-                Get in touch
+                {isSubmitting ? "Sending..." : "Get in touch"}
                 <span className="text-accent">→</span>
               </motion.button>
+
+              {/* Success/Error Message */}
+              {submitMessage && (
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`text-base md:text-lg font-medium ${
+                    submitMessage.includes("successfully")
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
+                  {submitMessage}
+                </motion.p>
+              )}
             </form>
           </motion.div>
         </div>
@@ -148,14 +205,14 @@ export default function Contact() {
               </p>
               <a
                 href="mailto:theodoraropi@gmail.com"
-                className="font-inter font-bold text-xl md:text-2xl lg:text-3xl xl:text-4xl tracking-tighter text-black hover:text-accent transition-colors block leading-tight"
+                className="font-inter font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl tracking-tighter text-black hover:text-accent transition-colors block leading-tight"
               >
                 theodoraropi@gmail.com
               </a>
             </div>
 
-            {/* Tagline */}
-            <div className="flex items-center">
+            {/* Tagline - Desktop only */}
+            <div className="hidden lg:flex items-center">
               <p className="font-inter font-medium text-sm md:text-base lg:text-lg text-black/70 leading-relaxed">
                 Your company gets more than just a website. We design
                 experiences that resonate with your customers and drive
@@ -164,6 +221,9 @@ export default function Contact() {
             </div>
           </div>
         </motion.div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
