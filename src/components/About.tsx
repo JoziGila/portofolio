@@ -50,7 +50,7 @@ export default function About() {
             <div className="space-y-4 lg:space-y-6">
               {/* Additional Description */}
               <p className="font-medium text-sm sm:text-base md:text-lg lg:text-xl leading-snug tracking-tight text-[rgba(12,12,12,0.6)]">
-                I've spent 4+ years learning that good creative isn't about having the fanciest tools—it's about understanding what makes people pause, feel, and remember. I use AI and modern workflows not because they're trendy, but because they free me up to focus on what actually matters: the story.
+                I've spent 4+ years learning that good creative isn't about having the fanciest tools. It's about understanding what makes people pause, feel, and remember. I use AI and modern workflows not because they're trendy, but because they free me up to focus on what actually matters: the story.
               </p>
 
               {/* Founder Info */}

@@ -8,13 +8,13 @@ const services = [
     id: "01",
     title: "Art Direction",
     description:
-      "Every visual decision matters—from the color palette to the final frame. I shape your brand's visual language to be distinctive, intentional, and memorable. Whether it's a campaign refresh or building something from the ground up.",
+      "Every visual decision matters, from the color palette to the final frame. I shape your brand's visual language to be distinctive, intentional, and memorable. Whether it's a campaign refresh or building something from the ground up.",
   },
   {
     id: "02",
     title: "Video Editing & Motion Design",
     description:
-      "Sharp pacing, intentional transitions, and emotional beats that land right. I edit videos that hold attention—from quick social cuts to full cinematic pieces. Every frame serves the story.",
+      "Sharp pacing, intentional transitions, and emotional beats that land right. I edit videos that hold attention, from quick social cuts to full cinematic pieces. Every frame serves the story.",
   },
   {
     id: "03",
@@ -26,7 +26,7 @@ const services = [
     id: "04",
     title: "Brand Visual Identity & Design",
     description:
-      "Cohesive visual systems built to work across every touchpoint. Logo, typography, color palette, templates—designed to scale with your brand and create consistency wherever you show up.",
+      "Cohesive visual systems built to work across every touchpoint. Logo, typography, color palette, templates designed to scale with your brand and create consistency wherever you show up.",
   },
 ];
 
